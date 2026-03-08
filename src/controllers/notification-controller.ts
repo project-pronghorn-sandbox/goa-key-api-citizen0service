@@ -38,15 +38,12 @@ export async function markAsRead(req: AuthenticatedRequest, res: Response, next:
 
     const id = req.params.id as string;
     
-    // First check if the notification exists and belongs to the user
-    const notifications = await serviceRequestRepository.getNotifications(req.user.sub);
-    const notification = notifications.find((n) => n.id === id);
+    // Use atomic check-and-update to prevent race conditions
+    const updated = await serviceRequestRepository.markNotificationReadForUser(id, req.user.sub);
 
-    if (!notification) {
+    if (!updated) {
       return next(createError("Notification not found", 404));
     }
-
-    const updated = await serviceRequestRepository.markNotificationRead(id);
 
     res.json(updated);
   } catch (error) {

@@ -2,6 +2,10 @@
  * Authentication middleware for validating JWT tokens.
  * In production, this validates tokens against Azure AD B2C or Entra ID.
  * For testing, tokens are validated by decoding and checking claims.
+ * 
+ * SECURITY NOTE: This implementation decodes JWTs without cryptographic verification.
+ * TODO: PRODUCTION - Implement JWT signature verification with Azure AD/Entra ID keys.
+ * See: https://learn.microsoft.com/en-us/azure/active-directory/develop/access-tokens
  */
 
 import type { Request, Response, NextFunction } from "express";
@@ -22,7 +26,14 @@ export interface AuthenticatedRequest extends Request {
 
 /**
  * Decode a JWT token and extract claims.
- * Note: In production, this should verify the signature with Azure AD keys.
+ * 
+ * IMPORTANT: This is a simplified implementation for testing purposes.
+ * In production, tokens MUST be cryptographically verified using:
+ * - Azure AD JWKS endpoint for signature verification
+ * - Issuer and audience validation
+ * - Token expiration checking
+ * 
+ * TODO: Use @azure/msal-node or passport-azure-ad for production
  */
 function decodeToken(token: string): AuthenticatedUser | null {
   try {

@@ -17,7 +17,15 @@ export function createApp() {
 
   // Security middleware
   app.use(helmet());
-  app.use(cors({ origin: process.env.ALLOWED_ORIGINS?.split(",") || "*" }));
+  
+  // CORS configuration - defaults to no allowed origins for security
+  // Set ALLOWED_ORIGINS environment variable to a comma-separated list of allowed domains
+  const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",").filter(Boolean) || [];
+  app.use(cors({ 
+    origin: allowedOrigins.length > 0 ? allowedOrigins : false,
+    credentials: true,
+  }));
+  
   app.use(express.json({ limit: "10kb" }));
   
   // Only apply rate limiting in production

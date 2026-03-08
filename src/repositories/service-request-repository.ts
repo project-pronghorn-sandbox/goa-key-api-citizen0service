@@ -235,6 +235,22 @@ export class ServiceRequestRepository {
     const db = getDatabase();
     return db.markNotificationAsRead(id);
   }
+
+  /**
+   * Mark a notification as read, only if it belongs to the specified user.
+   * This prevents race conditions by atomically checking ownership.
+   */
+  async markNotificationReadForUser(id: string, userId: string): Promise<Notification | undefined> {
+    const db = getDatabase();
+    const notifications = db.getNotificationsByRecipient(userId);
+    const notification = notifications.find((n) => n.id === id);
+    
+    if (!notification) {
+      return undefined;
+    }
+    
+    return db.markNotificationAsRead(id);
+  }
 }
 
 // Export a singleton instance
