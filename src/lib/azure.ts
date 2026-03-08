@@ -20,6 +20,7 @@ export async function initAppInsights(): Promise<void> {
     return;
   }
   try {
+    // @ts-expect-error - Optional Azure dependency, loaded dynamically
     const { useAzureMonitor } = await import("@azure/monitor-opentelemetry");
     useAzureMonitor({ azureMonitorExporterOptions: { connectionString } });
     appInsightsInitialized = true;
@@ -40,7 +41,9 @@ export async function getKeyVaultSecret(secretName: string): Promise<string | un
     return undefined;
   }
   try {
+    // @ts-expect-error - Optional Azure dependency, loaded dynamically
     const { DefaultAzureCredential } = await import("@azure/identity");
+    // @ts-expect-error - Optional Azure dependency, loaded dynamically
     const { SecretClient } = await import("@azure/keyvault-secrets");
     const client = new SecretClient(`https://${vaultName}.vault.azure.net`, new DefaultAzureCredential());
     const secret = await client.getSecret(secretName);
