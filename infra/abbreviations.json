@@ -1,0 +1,9 @@
+{
+  "resourcesResourceGroups": "rg-",
+  "operationalInsightsWorkspaces": "log-",
+  "insightsComponents": "appi-",
+  "appManagedEnvironments": "cae-",
+  "containerRegistryRegistries": "cr",
+  "keyVaultVaults": "kv-",
+  "appContainerApps": "ca-"
+}

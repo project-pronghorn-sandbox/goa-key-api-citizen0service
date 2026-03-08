@@ -1,0 +1,17 @@
+name: goa--key-api-citizen0service
+metadata:
+  template: pronghorn-enterprise@0.1.0
+services:
+  app:
+    project: ./
+    language: ts
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+    hooks:
+      preprovision:
+        shell: sh
+        run: echo "Provisioning Azure resources for goa--key-api-citizen0service..."
+      postdeploy:
+        shell: sh
+        run: echo "Deployment complete! Verifying health..."; curl -sf http://localhost:3000/health || true
